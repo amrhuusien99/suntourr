@@ -1,0 +1,76 @@
+@extends('layouts.app')
+
+@section('content')
+
+    @section('page_title')
+        Comments
+    @endsection
+
+    <section class="content">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">List Of Comments</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                        <i class="fas fa-minus"></i></button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
+                        <i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="card-body">
+                @if(count($records))
+                    <div calss="table-rseponsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Content</th>
+                                    <th>Client</th>
+                                    <th>Hotel</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($records as $record)
+                                    <tr>
+                                        <td>{{$record->id}}</td>
+                                        <td>{{$record->content}}</td>
+                                        <td>{{optional($record->client)->name}}</td>
+                                        <td>{{optional($record->hotel)->name}}</td>
+                                        <td class="text-center">
+
+                                            <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal-{{ $record->id}}">
+                                                <i class="fa fa-trash"></i> Delete
+                                            </button>
+
+                                            <div class="modal fade" id="myModal-{{ $record->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form role="form" action="{{url(route('comments.destroy',$record->id))}}" class="" method="POST">
+                                                                <input name="_method" type="hidden" value="DELETE">
+                                                                {{ csrf_field() }}
+                                                                <p>are you sure To Delete This Data</p>
+                                                                <button type="submit" class="btn btn-danger" name='delete_modal'><i class="fa fa-trash" aria-hidden="true"></i> delete</button>
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                    </tr>  
+                                @endforeach 
+                            </tbody>
+                        </table>
+                    </div>  
+                @endif                   
+            </div>
+        </div>
+    </section>
+
+@endsection
